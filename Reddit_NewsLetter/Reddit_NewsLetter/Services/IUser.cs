@@ -9,6 +9,6 @@ namespace Reddit_NewsLetter.Services
     public interface IUser
     {
         Task<UserModel> AddUser(UserModel user);
-        Task<UserModel> UpdateUser(UserModel updateduser);
+        Task<UserModel> UpdateUser(UserModel updateduser,Guid id);
     }
 }

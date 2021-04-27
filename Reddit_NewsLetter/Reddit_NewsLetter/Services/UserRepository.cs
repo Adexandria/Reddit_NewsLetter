@@ -26,15 +26,16 @@ namespace Reddit_NewsLetter.Services
             return user;
         }
         
-        public async Task<UserModel> UpdateUser(UserModel updateduser)
+        public async Task<UserModel> UpdateUser(UserModel updateduser,Guid id)
         {
-            var query = await GetUser(updateduser.Id);
+            var query = await GetUser(id);
             if(query == null) 
             {
                 throw new NullReferenceException(nameof(query));
             }
             var user = db.User.Attach(updateduser);
             user.State = EntityState.Modified;
+            await db.SaveChangesAsync();
             return updateduser;
         }
         private async Task<UserModel> GetUser(Guid id) 
