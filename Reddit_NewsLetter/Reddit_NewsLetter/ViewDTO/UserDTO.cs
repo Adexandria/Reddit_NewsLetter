@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Reddit_NewsLetter.ViewDTO
 {
-    public class UserDTO : UserModel
+    public class UserDTO 
     {
+        public string Email { get; set; }
+        public LinkDto UpdateLink { get; set; }
     }
 }
