@@ -33,6 +33,7 @@ namespace Reddit_NewsLetter.Services
             {
                 throw new NullReferenceException(nameof(query));
             }
+            updateduser.Id = query.Id;
             var user = db.User.Attach(updateduser);
             user.State = EntityState.Modified;
             await db.SaveChangesAsync();
@@ -44,7 +45,7 @@ namespace Reddit_NewsLetter.Services
             {
                 throw new NullReferenceException(nameof(id));
             }
-            return await db.User.Where(s => s.Id == id).FirstOrDefaultAsync();
+            return await db.User.Where(s => s.Id == id).AsNoTracking().FirstOrDefaultAsync();
         }
     }
 }
