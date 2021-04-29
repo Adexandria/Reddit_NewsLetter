@@ -11,6 +11,10 @@ using System.Text;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using Reddit_NewsLetter.RedditModel;
+using Reddit_NewsLetter.Model;
+using AutoMapper;
+using Reddit_NewsLetter.ViewDTO;
+using Reddit_NewsLetter.Services;
 
 namespace Reddit_NewsLetter.Controllers
 {
@@ -22,13 +26,45 @@ namespace Reddit_NewsLetter.Controllers
         private readonly string client_Secret = Environment.GetEnvironmentVariable("Client_Secret");
         private readonly string urlBase = Environment.GetEnvironmentVariable("AccessUrl");
 
-        [HttpPost("search/{name}")]
-        public  ActionResult Post(string name)
+        private readonly IMapper mapper;
+        private readonly ISubreddit reddit;
+        private readonly IUser user;
+        public RedditController(IMapper mapper, ISubreddit reddit, IUser user)
         {
-            var result = GetAccessCode().Result;
-            var subreddits = GetAvailableSubreddit(name, result);
+            this.reddit = reddit;
+            this.mapper = mapper;
+            this.user = user;
+                
+        }
+
+        [HttpPost("search/{name}")]
+        public async Task<ActionResult> Post(string name)
+        {
+            var code = await GetAccessCode();
+            var subreddits = GetAvailableSubreddit(name, code);
             return Ok(subreddits);
 
+        }
+        [HttpPost("{id}")]
+        public async Task<ActionResult<SubredditDTO>> Subscribe(SubredditCreate subreddit, Guid id) 
+        {
+            var getUser = await user.GetUser(id);
+            var link = CreateUserLink();
+            if ( getUser == null) 
+            {
+                return NotFound($"You need to subscribe, follow this link {link.Href} using the {link.Method} method");
+            }
+            var code = await GetAccessCode();
+            var subredditName = mapper.Map<SubredditModel>(subreddit);
+            subredditName.UserId = id;
+            var isAvailable = GetAvailableSubreddit(subredditName.Subreddit,code);
+            if(isAvailable == null) 
+            {
+                return NotFound("Subreddit not available");
+            }
+            var subscribed = await reddit.UpdateSubreddit(subredditName, subredditName.Id);
+            var subscribedView = mapper.Map<SubredditDTO>(subscribed);
+            return Ok(subscribedView);
         }
         private List<string> GetAvailableSubreddit(string name,string result) 
         {
@@ -41,7 +77,12 @@ namespace Reddit_NewsLetter.Controllers
         {
             try
             {
-                var response = await GetResponse(urlBase);
+                var client = new HttpClient();
+                var Id = client_Id + ":" + client_Secret;
+                var base64Credentials = GetEncodedString(Id);
+                String authorizationHeader = "Basic " + base64Credentials;
+                client.DefaultRequestHeaders.Add("Authorization", authorizationHeader);
+                HttpResponseMessage response = await client.PostAsync(urlBase, null);
                 var contenttype = await response.Content.ReadAsStringAsync();
                 var accessCode = JsonConvert.DeserializeObject<ResultModel>(contenttype);
                 return accessCode.AccessCode;
@@ -52,32 +93,7 @@ namespace Reddit_NewsLetter.Controllers
                 return e.Message;
             }
         }
-        private async Task<string> GetRefreshCode(string token) 
-        {
-            try
-            {
-                var parameter = $"?grant_type=refresh_token&refresh_token={token}";
-                var url = urlBase + parameter;
-                var response = await GetResponse(url);
-                var contenttype = await response.Content.ReadAsStringAsync();
-                return contenttype;
-            }
-            catch(Exception e)
-            {
-                return e.Message;
-            }
-            
-        }
-        private async Task<HttpResponseMessage> GetResponse(string url) 
-        {
-            var client = new HttpClient();
-            var Id = client_Id + ":" + client_Secret;
-            var base64Credentials = GetEncodedString(Id);
-            String authorizationHeader = "Basic " + base64Credentials;
-            client.DefaultRequestHeaders.Add("Authorization", authorizationHeader);
-            HttpResponseMessage response = await client.PostAsync(url, null);
-            return response;
-        }
+        
         private string GetEncodedString(string id)
         {
             byte[] toEncodeAsBytes
@@ -89,6 +105,14 @@ namespace Reddit_NewsLetter.Controllers
                   = Convert.ToBase64String(toEncodeAsBytes);
 
             return returnValue;
+        }
+        public LinkDto CreateUserLink()
+        {
+            var links = new LinkDto(Url.Link("AddUser",null),
+           "Subscribe",
+           "POST");
+            return links;
+
         }
     }
 }
