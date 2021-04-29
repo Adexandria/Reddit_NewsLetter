@@ -23,12 +23,15 @@ namespace Reddit_NewsLetter
         {
             services.AddControllers();
             services.AddScoped<IUser,UserRepository>();
+            services.AddScoped<ISubreddit, SubredditRepository>();
             services.AddDbContext<RedditDb>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("Reddit_NewsLetter"));
             });
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+           
         }
+    
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -40,6 +43,7 @@ namespace Reddit_NewsLetter
 
             app.UseHttpsRedirection();
 
+            
             app.UseRouting();
 
             app.UseAuthorization();
