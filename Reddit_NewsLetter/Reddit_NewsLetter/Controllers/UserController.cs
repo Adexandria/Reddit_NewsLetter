@@ -28,7 +28,7 @@ namespace Reddit_NewsLetter.Controllers
         {
             var newuser = mapper.Map<UserModel>(createuser);
             await user.AddUser(newuser);
-            var link = CreateUserLink(newuser.Id);
+            var link = CreateUserLink(newuser.UserId);
             var userView= mapper.Map<UserDTO>(newuser);
             userView.UpdateLink = link;
             return Created("created",userView);
@@ -39,6 +39,10 @@ namespace Reddit_NewsLetter.Controllers
         [HttpPut("{id}",Name = "UpdateUser")]
         public async Task<ActionResult<UserDTO>> Put(Guid id,UserUpdate updateduser)
         {
+            if(id == null) 
+            {
+                return NotFound();
+            }
             var updateuser = mapper.Map<UserModel>(updateduser);
             await user.UpdateUser(updateuser, id);
             return Ok("Sucessfully Updated");

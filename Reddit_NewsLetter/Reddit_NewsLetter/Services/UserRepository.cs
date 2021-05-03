@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Reddit_NewsLetter.Model;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +10,15 @@ namespace Reddit_NewsLetter.Services
     public class UserRepository : IUser
     {
         private readonly RedditDb db;
+
+        public IEnumerable<UserModel> GetUsers
+        {
+            get
+            {
+                return db.User.AsQueryable().OrderBy(s => s.UserId);
+            }
+        }
+
         public UserRepository(RedditDb db)
         {
             this.db = db;

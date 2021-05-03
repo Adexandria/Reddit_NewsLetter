@@ -14,5 +14,6 @@ namespace Reddit_NewsLetter.Services
 
         }
         public DbSet<UserModel> User { get; set; }
+        public DbSet<SubredditModel> Subreddit { get; set; }
     }
 }

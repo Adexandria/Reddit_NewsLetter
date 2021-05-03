@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\T14\\source\\repos\\Reddit_NewsLetter\\Reddit_NewsLetter\\Reddit_NewsLetter.csproj": {}
+    "C:\\Users\\T14\\Documents\\Local Git\\Reddit_NewsLetter\\Reddit_NewsLetter\\Reddit_NewsLetter\\Reddit_NewsLetter.csproj": {}
   },
   "projects": {
-    "C:\\Users\\T14\\source\\repos\\Reddit_NewsLetter\\Reddit_NewsLetter\\Reddit_NewsLetter.csproj": {
+    "C:\\Users\\T14\\Documents\\Local Git\\Reddit_NewsLetter\\Reddit_NewsLetter\\Reddit_NewsLetter\\Reddit_NewsLetter.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\T14\\source\\repos\\Reddit_NewsLetter\\Reddit_NewsLetter\\Reddit_NewsLetter.csproj",
+        "projectUniqueName": "C:\\Users\\T14\\Documents\\Local Git\\Reddit_NewsLetter\\Reddit_NewsLetter\\Reddit_NewsLetter\\Reddit_NewsLetter.csproj",
         "projectName": "Reddit_NewsLetter",
-        "projectPath": "C:\\Users\\T14\\source\\repos\\Reddit_NewsLetter\\Reddit_NewsLetter\\Reddit_NewsLetter.csproj",
+        "projectPath": "C:\\Users\\T14\\Documents\\Local Git\\Reddit_NewsLetter\\Reddit_NewsLetter\\Reddit_NewsLetter\\Reddit_NewsLetter.csproj",
         "packagesPath": "C:\\Users\\T14\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\T14\\source\\repos\\Reddit_NewsLetter\\Reddit_NewsLetter\\obj\\",
+        "outputPath": "C:\\Users\\T14\\Documents\\Local Git\\Reddit_NewsLetter\\Reddit_NewsLetter\\Reddit_NewsLetter\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\T14\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -39,6 +39,50 @@
       "frameworks": {
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[10.1.1, )"
+            },
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[8.1.1, )"
+            },
+            "EntityFramework": {
+              "target": "Package",
+              "version": "[6.4.4, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[5.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.5, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "Reddit": {
+              "target": "Package",
+              "version": "[1.5.0, )"
+            },
+            "Reddit.AuthTokenRetrieverLib": {
+              "target": "Package",
+              "version": "[1.5.1, )"
+            },
+            "RedditSharp": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

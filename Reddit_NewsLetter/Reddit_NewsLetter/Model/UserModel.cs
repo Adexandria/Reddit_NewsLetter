@@ -9,7 +9,9 @@ namespace Reddit_NewsLetter.Model
     public class UserModel
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid UserId { get; set; } 
         public string Email { get; set; }
+        public int Hourtime { get; set; } = 8;
+        public bool Toogle { get; set; }
     }
 }

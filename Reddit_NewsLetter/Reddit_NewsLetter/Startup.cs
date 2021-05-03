@@ -29,7 +29,7 @@ namespace Reddit_NewsLetter
                 opt.UseSqlServer(Configuration.GetConnectionString("Reddit_NewsLetter"));
             });
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-           
+            services.AddSingleton<Subreddits>();
         }
     
 

@@ -18,7 +18,7 @@ namespace Reddit_NewsLetter.Services
 
         public async Task<SubredditModel> UpdateSubreddit(SubredditModel updateSubreddit,Guid id)
         {
-            var query = await GetById(id);
+            var query = await GetSubreddit(id);
             if(query == null)
             {
                 await AddSubreddit(updateSubreddit);
@@ -28,15 +28,23 @@ namespace Reddit_NewsLetter.Services
                 db.Entry(query).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
                 db.Entry(updateSubreddit).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
-            return await GetById(updateSubreddit.Id);
+            return updateSubreddit;
         }
-        private async Task<SubredditModel> GetById(Guid id) 
+        private async Task<SubredditModel>GetSubreddit(Guid id) 
+        {
+            if (id == null)
+            {
+                throw new NullReferenceException(nameof(id));
+            }
+            return await db.Subreddit.AsQueryable().Where(x => x.Id == id).AsNoTracking().FirstOrDefaultAsync();
+        }
+        public IEnumerable<SubredditModel> GetAllSubreddit(Guid id) 
         {
             if(id == null) 
             {
                 throw new NullReferenceException(nameof(id));
             }
-            return await db.Subreddit.AsQueryable().Where(x => x.Id == id).AsNoTracking().FirstOrDefaultAsync();
+            return  db.Subreddit.AsQueryable().Where(x => x.UserId == id).AsNoTracking();
         }
         private async Task<SubredditModel> AddSubreddit(SubredditModel subreddit)
         {
