@@ -3,12 +3,10 @@ using Newtonsoft.Json;
 using Reddit_NewsLetter.Model;
 using Reddit_NewsLetter.Model.PostModel;
 using Reddit_NewsLetter.RedditModel;
-using Reddit_NewsLetter.ViewDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-
 using System.Text;
 using System.Threading.Tasks;
 

@@ -4,8 +4,6 @@ using Reddit_NewsLetter.Model;
 using Reddit_NewsLetter.Services;
 using Reddit_NewsLetter.ViewDTO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 
@@ -15,21 +13,21 @@ namespace Reddit_NewsLetter.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUser user;
-        private IMapper mapper;
-        public  UserController(IUser user, IMapper mapper)
+        private readonly IUser _user;
+        private IMapper _mapper;
+        public  UserController(IUser _user, IMapper _mapper)
         {
-            this.user = user;
-            this.mapper = mapper;
+            this._user = _user;
+            this._mapper = _mapper;
         }
         // add new user
         [HttpPost]
         public async Task<ActionResult<UserDTO>> Post(UserCreate createuser )
         {
-            var newuser = mapper.Map<UserModel>(createuser);
-            await user.AddUser(newuser);
+            var newuser = _mapper.Map<UserModel>(createuser);
+            await _user.AddUser(newuser);
             var link = CreateUserLink(newuser.UserId);
-            var userView= mapper.Map<UserDTO>(newuser);
+            var userView= _mapper.Map<UserDTO>(newuser);
             userView.UpdateLink = link;
             return Created("created",userView);
         }
@@ -43,8 +41,8 @@ namespace Reddit_NewsLetter.Controllers
             {
                 return NotFound();
             }
-            var updateuser = mapper.Map<UserModel>(updateduser);
-            await user.UpdateUser(updateuser, id);
+            var updateuser = _mapper.Map<UserModel>(updateduser);
+            await _user.UpdateUser(updateuser, id);
             return Ok("Sucessfully Updated");
         }
 
