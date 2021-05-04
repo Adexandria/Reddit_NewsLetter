@@ -12,6 +12,6 @@ namespace Reddit_NewsLetter.Model
         public Guid UserId { get; set; } 
         public string Email { get; set; }
         public int Hourtime { get; set; } = 8;
-        public bool Toogle { get; set; }
+        public bool Toogle { get; set; } = true;
     }
 }

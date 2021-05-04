@@ -1,16 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RedditSharp;
-using Reddit.AuthTokenRetriever.EventArgs;
-using Reddit.AuthTokenRetriever;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Text;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
-using Reddit_NewsLetter.RedditModel;
 using Reddit_NewsLetter.Model;
 using AutoMapper;
 using Reddit_NewsLetter.ViewDTO;

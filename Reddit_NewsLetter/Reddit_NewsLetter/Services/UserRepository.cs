@@ -11,17 +11,19 @@ namespace Reddit_NewsLetter.Services
     {
         private readonly RedditDb db;
 
+
+
+        public UserRepository(RedditDb db)
+        {
+            this.db = db;
+
+        }
         public IEnumerable<UserModel> GetUsers
         {
             get
             {
                 return db.User.AsQueryable().OrderBy(s => s.UserId);
             }
-        }
-
-        public UserRepository(RedditDb db)
-        {
-            this.db = db;
         }
         public async Task<UserModel> GetUser(Guid id)
         {
@@ -57,6 +59,20 @@ namespace Reddit_NewsLetter.Services
             await db.SaveChangesAsync();
             return updateduser;
         }
-       
+
+        public async Task<int> UserSubscription(UserModel user)
+        {   if(user.Toogle == true) 
+            {
+                user.Toogle = false;
+            }
+            else
+            {
+                user.Toogle = true;
+            }
+            var updateduser = db.User.Attach(user);
+            updateduser.State = EntityState.Modified;
+           return await db.SaveChangesAsync();
+
+        }
     }
 }

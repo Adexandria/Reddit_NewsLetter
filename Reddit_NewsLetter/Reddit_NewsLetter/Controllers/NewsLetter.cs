@@ -43,6 +43,7 @@ namespace Reddit_NewsLetter.Controllers
             return Ok(response);
            
         }
+       
         private async Task<string> UserSubreddit() 
         {
             var users = _user.GetUsers.ToList();
@@ -50,7 +51,7 @@ namespace Reddit_NewsLetter.Controllers
             var date = DateTime.Today;
             var responses = new List<string>();
             
-            foreach (var user in users)
+            foreach (var user in users.Where(s=>s.Toogle==true))
             {
                 var subreddit =  _reddit.GetAllSubreddit(user.UserId).ToList();
                 foreach (var item in subreddit)

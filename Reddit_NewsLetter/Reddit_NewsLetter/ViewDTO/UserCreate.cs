@@ -11,5 +11,6 @@ namespace Reddit_NewsLetter.ViewDTO
         [Required(ErrorMessage ="Enter Email")]
         [EmailAddress]
         public string Email { get; set; }
+        public int Hours { get; set; }
     }
 }

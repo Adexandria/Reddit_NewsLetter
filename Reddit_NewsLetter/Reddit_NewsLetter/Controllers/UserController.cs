@@ -45,7 +45,28 @@ namespace Reddit_NewsLetter.Controllers
             await _user.UpdateUser(updateuser, id);
             return Ok("Sucessfully Updated");
         }
-
+        [HttpPost("Unsubscribe/{id}")]
+        public async Task<ActionResult> Unsubscribe(Guid id) 
+        {
+            var user = await _user.GetUser(id);
+            if(user == null) 
+            {
+                return NotFound();
+            }
+            await _user.UserSubscription(user);
+            return Ok("Sucessfully Unsubscribed");
+        }
+        [HttpPost("subscribe/{id}")]
+        public async Task<ActionResult> Subscribe(Guid id)
+        {
+            var user = await _user.GetUser(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            await _user.UserSubscription(user);
+            return Ok("Sucessfully Subscribed");
+        }
         public LinkDto CreateUserLink(Guid id)
         {
             var links = new LinkDto(Url.Link("UpdateUser", new { id }),
