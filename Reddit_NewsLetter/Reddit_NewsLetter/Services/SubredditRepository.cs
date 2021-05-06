@@ -36,7 +36,7 @@ namespace Reddit_NewsLetter.Services
             {
                 throw new NullReferenceException(nameof(id));
             }
-            return await db.Subreddit.AsQueryable().Where(x => x.Id == id).AsNoTracking().FirstOrDefaultAsync();
+            return await db.Subreddit.AsQueryable().Where(data => data.Id == id).AsNoTracking().FirstOrDefaultAsync();
         }
         public IEnumerable<SubredditModel> GetAllSubreddit(Guid id) 
         {
@@ -44,7 +44,7 @@ namespace Reddit_NewsLetter.Services
             {
                 throw new NullReferenceException(nameof(id));
             }
-            return  db.Subreddit.AsQueryable().Where(x => x.UserId == id).AsNoTracking();
+            return  db.Subreddit.AsQueryable().Where(data => data.UserId == id).AsNoTracking();
         }
         private async Task<SubredditModel> AddSubreddit(SubredditModel subreddit)
         {

@@ -16,6 +16,7 @@ namespace Reddit_NewsLetter.Profiles
 
             CreateMap<UserModel, To>()
                 .ForMember(x => x.Email, opt => opt.MapFrom(e => e.Email));
+
             CreateMap<Data2, MessageModel>();
                
         }

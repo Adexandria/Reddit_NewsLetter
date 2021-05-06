@@ -11,8 +11,6 @@ namespace Reddit_NewsLetter.Services
     {
         private readonly RedditDb db;
 
-
-
         public UserRepository(RedditDb db)
         {
             this.db = db;
@@ -22,7 +20,7 @@ namespace Reddit_NewsLetter.Services
         {
             get
             {
-                return db.User.AsQueryable().OrderBy(s => s.UserId);
+                return db.User.AsQueryable().OrderBy(data => data.UserId);
             }
         }
         public async Task<UserModel> GetUser(Guid id)
@@ -32,8 +30,9 @@ namespace Reddit_NewsLetter.Services
                 throw new NullReferenceException(nameof(id));
             }
 
-            return await db.User.AsQueryable().Where(s => s.UserId == id).AsNoTracking().FirstOrDefaultAsync();
+            return await db.User.AsQueryable().Where(data => data.UserId == id).AsNoTracking().FirstOrDefaultAsync();
         }
+
         public async Task<UserModel> AddUser(UserModel user)
         {
             if(user == null) 
@@ -46,28 +45,29 @@ namespace Reddit_NewsLetter.Services
             return user;
         }
         
-        public async Task<UserModel> UpdateUser(UserModel updateduser,Guid id)
+        public async Task<UserModel> UpdateUser(UserModel updatedUser,Guid id)
         {
             var query = await GetUser(id);
             if(query == null) 
             {
                 throw new System.NullReferenceException(nameof(query));
             }
-            updateduser.UserId = query.UserId;
-            var user = db.User.Attach(updateduser);
+            updatedUser.UserId = query.UserId;
+            var user = db.User.Attach(updatedUser);
             user.State = EntityState.Modified;
             await db.SaveChangesAsync();
-            return updateduser;
+            return updatedUser;
         }
 
         public async Task<int> UserSubscription(UserModel user)
-        {   if(user.Toogle == true) 
+        {   
+            if(user.Toogle == true) 
             {
-                user.Toogle = false;
+               user.Toogle = false;
             }
             else
             {
-                user.Toogle = true;
+               user.Toogle = true;
             }
             var updateduser = db.User.Attach(user);
             updateduser.State = EntityState.Modified;

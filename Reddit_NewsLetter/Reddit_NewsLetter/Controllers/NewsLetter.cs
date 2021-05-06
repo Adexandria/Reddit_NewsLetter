@@ -18,10 +18,10 @@ namespace Reddit_NewsLetter.Controllers
     public class NewsLetter : ControllerBase
     {
         
-        private readonly string api_key = Environment.GetEnvironmentVariable("redditnewsletter");
-        private readonly string officialemail = Environment.GetEnvironmentVariable("email");
+        private readonly string sendgridApi_key = Environment.GetEnvironmentVariable("redditnewsletter");
+        private readonly string officialEmail = Environment.GetEnvironmentVariable("email");
         private readonly string sendgridUrl = Environment.GetEnvironmentVariable("sendgrid");
-        private readonly string Batchid = Environment.GetEnvironmentVariable("batch_id");
+        private readonly string sendgridBatchid = Environment.GetEnvironmentVariable("batch_id");
 
         private readonly IMapper _mapper;
         private readonly Subreddits _subreddits;
@@ -65,8 +65,8 @@ namespace Reddit_NewsLetter.Controllers
                     Type = "application/json",
                     Value = content
                 };
-                var x = date.AddHours(user.Hourtime);
-                var unixTimeSeconds = (int)new DateTimeOffset(x).ToUnixTimeSeconds();
+                var dateTime = date.AddHours(user.Hourtime);
+                var unixTimeSeconds = (int)new DateTimeOffset(dateTime).ToUnixTimeSeconds();
                 var response = await SendMessage(Content, user, unixTimeSeconds);
                 responses.Add(response);
 
@@ -84,14 +84,14 @@ namespace Reddit_NewsLetter.Controllers
             {
                 var client = new HttpClient();
                 var url = sendgridUrl + "v3/mail/send";
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {api_key}");
+                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {sendgridApi_key}");
                 MediaTypeWithQualityHeaderValue mediaType = new MediaTypeWithQualityHeaderValue("application/json");
                 client.DefaultRequestHeaders.Accept.Add(mediaType);
               
-                var emails = _mapper.Map<To>(users);
+                var userEmail = _mapper.Map<To>(users);
                 var person = new Personalization
                 {
-                    To = new To[] {emails}
+                    To = new To[] {userEmail}
                 };
                 ContentModel model = new ContentModel
                 {
@@ -99,28 +99,31 @@ namespace Reddit_NewsLetter.Controllers
 
                     From = new From
                     {
-                        Email = officialemail
+                        Email = officialEmail
                     },
-                    Subject = "Reddit NewsLetter",
+                    Subject = "Reddit Daily NewsLetter",
                     SendAt = time,
-                    BatchId = Batchid,
+                    BatchId = sendgridBatchid,
                     Personalizations = new Personalization[] {person}
                     
                 };
                 
-                var json = JsonConvert.SerializeObject(model,Formatting.Indented);
+                var jsonContent = JsonConvert.SerializeObject(model,Formatting.Indented);
                 HttpResponseMessage response;
-                using (var stringcontent = new StringContent(json))
+                using (var stringContent = new StringContent(jsonContent))
                 {
-                  stringcontent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                  response = await client.PostAsync(url, stringcontent);
+                  stringContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                  response = await client.PostAsync(url, stringContent);
                 }
                 
                 if (response.IsSuccessStatusCode) 
                 {
                     return "Sucessful";
                 }
-                return "Unsucessful";
+                else
+                {
+                    return "Unsucessful";
+                }
             }
             catch (Exception e)
             {

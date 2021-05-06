@@ -18,7 +18,7 @@ namespace Reddit_NewsLetter.Services
         private readonly string client_Id = Environment.GetEnvironmentVariable("Client_Id");
         private readonly string client_Secret = Environment.GetEnvironmentVariable("Client_Secret");
         private readonly string redditUrl = Environment.GetEnvironmentVariable("RedditUrl");
-        private readonly string urlBase = Environment.GetEnvironmentVariable("AccessUrl");
+        private readonly string redditAccessUrlBase = Environment.GetEnvironmentVariable("AccessUrl");
 
         private readonly IMapper mapper;
         public Subreddits( IMapper mapper)
@@ -36,8 +36,8 @@ namespace Reddit_NewsLetter.Services
                 HttpResponseMessage response = await client.GetAsync(urlBase);
                 var content = await response.Content.ReadAsStringAsync();
                 Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(content);
-                var data = myDeserializedClass.Data.Children.Select(data => data.Data).Where(data => data.Pinned == false).Where(data => data.Stickied == false).ToList();
-                List<MessageModel> messages = mapper.Map<List<MessageModel>>(data);
+                var processedData = myDeserializedClass.Data.Children.Select(data => data.Data).Where(data => data.Pinned == false).Where(data => data.Stickied == false).ToList();
+                List<MessageModel> messages = mapper.Map<List<MessageModel>>(processedData);
                 return messages;
             }
             catch (Exception)
@@ -53,9 +53,9 @@ namespace Reddit_NewsLetter.Services
             try
             {
                 var client = GetClient();
-                HttpResponseMessage response = await client.PostAsync(urlBase, null);
-                var contenttype = await response.Content.ReadAsStringAsync();
-                var accessCode = JsonConvert.DeserializeObject<ResultModel>(contenttype);
+                HttpResponseMessage response = await client.PostAsync(redditAccessUrlBase, null);
+                var stringContent = await response.Content.ReadAsStringAsync();
+                var accessCode = JsonConvert.DeserializeObject<ResultModel>(stringContent);
                 return accessCode.AccessCode;
             }
             catch (Exception e)
@@ -64,9 +64,9 @@ namespace Reddit_NewsLetter.Services
                 return e.Message;
             }
         }
-        public List<string> GetAvailableSubreddit(string name, string result)
+        public List<string> GetAvailableSubreddit(string name, string acessCode)
         {
-            var reddit = new Reddit.RedditClient(appId: client_Id, appSecret: client_Secret, accessToken: result);
+            var reddit = new Reddit.RedditClient(appId: client_Id, appSecret: client_Secret, accessToken: acessCode);
             var subreddits = reddit.SearchSubredditNames(name);
             var subredditList = subreddits.Select(s => s.Name).ToList();
             return subredditList;

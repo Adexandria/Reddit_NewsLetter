@@ -8,12 +8,11 @@ namespace Reddit_NewsLetter.Profiles
     {
         public UserProfile()
         {
-            CreateMap<UserModel, UserDTO>()
-                .ForMember(dest => dest.Email, opt => opt.MapFrom(s => s.Email));
-            CreateMap<UserCreate, UserModel>()
-                .ForMember(dest => dest.Email, opt => opt.MapFrom(s => s.Email));
-            CreateMap<UserUpdate, UserModel>()
-               .ForMember(dest => dest.Email, opt => opt.MapFrom(s => s.Email));
+            CreateMap<UserModel, UserDTO>();
+
+            CreateMap<UserCreate, UserModel>();
+
+            CreateMap<UserUpdate, UserModel>();
         }
     }
 }

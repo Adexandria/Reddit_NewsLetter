@@ -34,25 +34,25 @@ namespace Reddit_NewsLetter.Controllers
 
         }
         [HttpPost("{id}")]
-        public async Task<ActionResult<SubredditDTO>> Subscribe(SubredditCreate subreddit, Guid id) 
+        public async Task<ActionResult<SubredditDTO>> Subscribe(SubredditCreate createSubreddit, Guid id) 
         {
             var getUser = await _user.GetUser(id);
-            var link = CreateUserLink();
+            var userLink = CreateUserLink();
             if ( getUser == null) 
             {
-                return NotFound($"You need to subscribe, follow this link {link.Href} using the {link.Method} method");
+                return NotFound($"You need to subscribe, follow this link {userLink.Href} using the {userLink.Method} method");
             }
-            var code = await _subreddit.GetAccessCode();
-            var subredditName = _mapper.Map<SubredditModel>(subreddit);
-            subredditName.UserId = id;
-            var isAvailable = _subreddit.GetAvailableSubreddit(subredditName.Subreddit,code);
+            var accessCode = await _subreddit.GetAccessCode();
+            var subreddit = _mapper.Map<SubredditModel>(createSubreddit);
+            subreddit.UserId = id;
+            var isAvailable = _subreddit.GetAvailableSubreddit(subreddit.Subreddit,accessCode);
             if(isAvailable == null) 
             {
                 return NotFound("Subreddit not available");
             }
-            var subscribed = await _reddit.UpdateSubreddit(subredditName, subredditName.Id);
-            var subscribedView = _mapper.Map<SubredditDTO>(subscribed);
-            return Ok(subscribedView);
+            var subscribedsubreddit = await _reddit.UpdateSubreddit(subreddit, subreddit.Id);
+            var subscribedSubredditView = _mapper.Map<SubredditDTO>(subscribedsubreddit);
+            return Ok(subscribedSubredditView);
         }
        
         public LinkDto CreateUserLink()
