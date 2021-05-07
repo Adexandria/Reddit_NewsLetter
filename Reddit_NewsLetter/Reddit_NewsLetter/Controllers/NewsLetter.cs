@@ -72,11 +72,11 @@ namespace Reddit_NewsLetter.Controllers
 
                 messages.Clear();
             }
-            if (responses.Contains("Unsucessful")) 
+            if (responses.Contains("Unsuccessful")) 
             {
               return "Unable to send to all subscribers";
             }
-            return "Sucessfully sent to all subscribers";
+            return "Successfully sent to all subscribers";
         }
         private async Task<string> SendMessage(Content content, UserModel users,int time) 
         {
@@ -118,11 +118,11 @@ namespace Reddit_NewsLetter.Controllers
                 
                 if (response.IsSuccessStatusCode) 
                 {
-                    return "Sucessful";
+                    return "Successful";
                 }
                 else
                 {
-                    return "Unsucessful";
+                    return "Unsuccessful";
                 }
             }
             catch (Exception e)
